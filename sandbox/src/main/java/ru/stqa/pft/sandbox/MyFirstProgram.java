@@ -6,12 +6,11 @@ public class MyFirstProgram {
     hello("world");
     hello("user");
 
-    double l = 5;
-    System.out.println("Площадь квадрата со стороной " + l + " = " + area(l));
+    Square s = new Square(5);
+    System.out.println("Площадь квадрата со стороной " + s.l + " = " + s.area());
 
-    double a = 4;
-    double b = 6;
-    System.out.println("Площадь прямоугольники со сторонами " + a +" и " + b + " = " + area(a, b) );
+    Rectangle r = new Rectangle(4, 6);
+    System.out.println("Площадь прямоугольники со сторонами " + r.a +" и " + r.b + " = " + r.area() );
   }
 
 
@@ -19,11 +18,4 @@ public class MyFirstProgram {
     System.out.println("Hello, " + somebody + "!");
   }
 
-  public static double area(double len) {
-    return len * len;
-  }
-
-  public static  double area(double a, double b) {
-    return a * b;
-  }
 }
