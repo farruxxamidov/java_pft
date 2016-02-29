@@ -2,8 +2,6 @@ package ru.stqa.pft.sandbox;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
-import ru.stqa.pft.sandbox.Square;
-
 
 /**
  * Created by Farrukh on 26-Feb-16.
