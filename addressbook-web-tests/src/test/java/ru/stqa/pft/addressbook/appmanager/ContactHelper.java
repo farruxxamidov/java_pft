@@ -59,9 +59,9 @@ public class ContactHelper extends HelperBase{
     click(By.name("update"));
   }
 
-  public void createContact(ContactData contact, boolean b) {
+  public void createContact(ContactData contact) {
 
-    fillContactForm(contact, b);
+    fillContactForm(contact, true);
     submitContactCreation();
   }
 
