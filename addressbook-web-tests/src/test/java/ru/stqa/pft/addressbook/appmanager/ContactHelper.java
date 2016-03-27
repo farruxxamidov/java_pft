@@ -3,11 +3,15 @@ package ru.stqa.pft.addressbook.appmanager;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.Select;
 import org.testng.Assert;
 import ru.stqa.pft.addressbook.model.ContactData;
+import ru.stqa.pft.addressbook.model.GroupData;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -46,13 +50,17 @@ public class ContactHelper extends HelperBase{
     acceptAlert();
   }
 
-  public void selectContact() {
-    click(By.xpath("html/body/div/div[4]/form[2]/table/tbody/tr[2]/td[1]/input"));
+  public void selectContact(int index) {
+    index += 2;
+    click(By.xpath("html/body/div/div[4]/form[2]/table/tbody/tr[" + index + "]/td[1]/input"));
+    //click(By.xpath("html/body/div/div[4]/form[2]/table/tbody/tr[2]/td[1]/input"));
   }
 
-  public void initContactModification() {
+  public void initContactModification(int index) {
+    index += 2;
+    click(By.xpath("html/body/div/div[4]/form[2]/table/tbody/tr[" + index + "]/td[8]/a/img"));
     //click(By.xpath("//table[@id='maintable']/tbody/tr[2]/td[8]/a/img"));
-    click(By.xpath("html/body/div/div[4]/form[2]/table/tbody/tr[2]/td[8]/a/img"));
+    //click(By.xpath("html/body/div/div[4]/form[2]/table/tbody/tr[2]/td[8]/a/img"));
   }
 
   public void submitContactModification() {
@@ -67,5 +75,22 @@ public class ContactHelper extends HelperBase{
 
   public boolean isThereAContact() {
     return isElementPresent(By.xpath("html/body/div/div[4]/form[2]/table/tbody/tr[2]/td[1]/input"));
+  }
+
+
+  public List<ContactData> getContactList() {
+    List<ContactData> contacts = new ArrayList<ContactData>();
+    List<WebElement> rows = wd.findElements(By.name("entry"));
+
+    for (WebElement row : rows) {
+      List<WebElement> cells = row.findElements(By.tagName("td"));
+      int id = Integer.parseInt(cells.get(0).findElement(By.tagName("input")).getAttribute("id"));
+      String lastname = cells.get(1).getText();
+      String firstname = cells.get(2).getText();
+      ContactData contact = new ContactData(id, firstname, lastname, null, null, null, null, null, null);
+      contacts.add(contact);
+    }
+
+    return contacts;
   }
 }
