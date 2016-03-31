@@ -1,30 +1,43 @@
 package ru.stqa.pft.addressbook.tests;
 
 import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import ru.stqa.pft.addressbook.model.ContactData;
+import ru.stqa.pft.addressbook.model.Contacts;
+import ru.stqa.pft.addressbook.model.GroupData;
 
 import java.util.List;
 
-public class ContactDeletionTests extends TestBase {
-    
-    @Test(enabled = false)
-    public void testContactDeletion() {
-        app.goTo().gotoHomePage();
-        if (! app.getContactHelper().isThereAContact()) {
-            app.goTo().goToContactPage();
-            app.getContactHelper().createContact(new ContactData("Farrukh", "Khamidov", "Uzbekistan, Tashkent, Bobur street, 4/1", "1111111", "2222222", "3333333", "tester@gmail.com", "test1"));
-            app.goTo().gotoHomePage();
-        }
-        List<ContactData> before = app.getContactHelper().getContactList();
-        app.getContactHelper().selectContact(before.size() - 1);
-        app.getContactHelper().deleteSelectedContacts();
-        app.goTo().gotoHomePage();
-        List<ContactData> after = app.getContactHelper().getContactList();
-        Assert.assertEquals(after.size(), before.size() - 1);
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.testng.Assert.assertEquals;
 
-        before.remove(before.size() - 1);
-        Assert.assertEquals(before, after);
+public class ContactDeletionTests extends TestBase {
+
+    @BeforeMethod
+    public void ensurePreconditions() {
+        app.goTo().homePage();
+        if (app.contact().all().size() == 0) {
+            app.goTo().groupPage();
+            if (app.group().all().size() == 0) {
+                app.group().create(new GroupData().withName("test1"));
+            }
+            app.goTo().homePage();
+            app.contact().createContact(new ContactData().withFirstName("Farrukh").withLastName("Khamidov").
+                    withAddress("Uzbekistan, Tashkent, Bobur street, 4/1").
+                    withHomePhone("111").withMobilePhone("222").withWorkPhone("333").withEmail("tester@gmail.com").withGroup("test1"));
+        }
+    }
+
+    @Test
+    public void testContactDeletion() {
+        Contacts before = app.contact().all();
+        ContactData deletedContact = before.iterator().next();
+        app.contact().delete(deletedContact);
+        Contacts after = app.contact().all();
+        assertEquals(after.size(), before.size() - 1);
+        assertThat(after, equalTo(before.without(deletedContact)));
     }
 
 }
