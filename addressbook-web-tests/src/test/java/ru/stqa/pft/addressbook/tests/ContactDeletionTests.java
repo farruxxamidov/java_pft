@@ -15,7 +15,7 @@ import static org.testng.Assert.assertEquals;
 
 public class ContactDeletionTests extends TestBase {
 
-    @BeforeMethod
+    @BeforeMethod(enabled = false)
     public void ensurePreconditions() {
         app.goTo().homePage();
         if (app.contact().all().size() == 0) {
@@ -30,7 +30,7 @@ public class ContactDeletionTests extends TestBase {
         }
     }
 
-    @Test
+    @Test(enabled = false)
     public void testContactDeletion() {
         Contacts before = app.contact().all();
         ContactData deletedContact = before.iterator().next();

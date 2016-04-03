@@ -30,7 +30,6 @@ public class GroupData {
 
     if (id != groupData.id) return false;
     return name != null ? name.equals(groupData.name) : groupData.name == null;
-
   }
 
   @Override
