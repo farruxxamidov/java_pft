@@ -30,11 +30,6 @@ public class ContactPhoneTests extends TestBase {
             .map(ContactPhoneTests::cleaned)
             .collect(Collectors.joining("\n"));
 
-//    String result = "";
-//    if (contact.getHomePhone() != null) {
-//      result = result + contact.getHomePhone();
-//    }
-//    return result;
   }
 
 
