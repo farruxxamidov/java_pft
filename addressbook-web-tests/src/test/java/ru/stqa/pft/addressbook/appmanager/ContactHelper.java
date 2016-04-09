@@ -160,4 +160,65 @@ public class ContactHelper extends HelperBase{
 
   }
 
+  public ContactData infoFIOFromEditForm(ContactData contact) {
+    initContactModificationById(contact.getId());
+    String firstname = wd.findElement(By.name("firstname")).getAttribute("value");
+    String lastname = wd.findElement(By.name("lastname")).getAttribute("value");
+    String fio = firstname.concat(" ").concat(lastname);
+    String homePhone = wd.findElement(By.name("home")).getAttribute("value");
+    String mobilePhone = wd.findElement(By.name("mobile")).getAttribute("value");
+    String workPhone = wd.findElement(By.name("work")).getAttribute("value");
+    String address = wd.findElement(By.cssSelector("textarea[name='address']")).getAttribute("value").concat("\n");
+    String email1 = wd.findElement(By.cssSelector("input[name='email']")).getAttribute("value");
+    String email2 = wd.findElement(By.cssSelector("input[name='email2']")).getAttribute("value");
+    String email3 = wd.findElement(By.cssSelector("input[name='email3']")).getAttribute("value");
+
+    if (!homePhone.equals("")) {
+      homePhone = "H: " + homePhone;
+    }
+    if (!homePhone.equals("") && mobilePhone.equals("") && workPhone.equals("")) {
+      homePhone = "H: " + homePhone + "\n";
+    }
+    if (!mobilePhone.equals("") && !workPhone.equals("")) {
+      mobilePhone = "M: " + mobilePhone;
+    }
+    if (!mobilePhone.equals("") && workPhone.equals("")) {
+      mobilePhone = "M: " + mobilePhone + "\n";
+    }
+    if (!workPhone.equals("")) {
+      workPhone = "W: " + workPhone + "\n";
+    }
+
+    wd.navigate().back();
+    initContactDetailsById(contact.getId());
+    if (email1.contains("www")) {
+      String domain1 = wd.findElement(By.xpath("//div[@id='content']//a[2]")).getText();
+      email1 = email1.concat(" (").concat(domain1).concat(")");
+    }
+    if (email2.contains("www")) {
+      String domain2 = wd.findElement(By.xpath("//div[@id='content']//a[4]")).getText();
+      email2 = email2.concat(" (").concat(domain2).concat(")");
+    }
+    if (email2.contains("www")) {
+      String domain3 = wd.findElement(By.xpath("//div[@id='content']//a[6]")).getText();
+      email3 = email3.concat(" (").concat(domain3).concat(")");
+    }
+    wd.navigate().back();
+    return new ContactData().withId(contact.getId()).withFio(fio).withAddress(address).
+            withEmail(email1).withEmail2(email2).withEmail3(email3).withHomePhone(homePhone).withMobilePhone(mobilePhone).
+            withWorkPhone(workPhone);
+  }
+
+
+  public ContactData infoFromDetailsForm(ContactData contact) {
+    initContactDetailsById(contact.getId());
+    String allData = wd.findElement(By.xpath("//div[@id='content']")).getText();
+    wd.navigate().back();
+    return new ContactData().withId(contact.getId()).withAllData(allData);
+  }
+
+  private void initContactDetailsById(int id) {
+    wd.findElement(By.cssSelector(String.format("a[href='view.php?id=%s']", id))).click();
+  }
+
 }

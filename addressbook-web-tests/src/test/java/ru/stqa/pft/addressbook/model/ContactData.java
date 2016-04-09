@@ -16,6 +16,10 @@ public class ContactData {
   private String group;
 
 
+  private String allData;
+
+  private String fio;
+
   public int getId() {
     return id;
   }
@@ -87,6 +91,16 @@ public class ContactData {
     return this;
   }
 
+  public ContactData withAllData(String allData) {
+    this.allData = allData;
+    return this;
+  }
+
+  public ContactData withFio(String fio) {
+    this.fio = fio;
+    return this;
+  }
+
 
   public void setId(int id) {
     this.id = id;
@@ -140,7 +154,13 @@ public class ContactData {
     return group;
   }
 
+  public String getAllData() {
+    return allData;
+  }
 
+  public String getFio() {
+    return fio;
+  }
 
   @Override
   public String toString() {
@@ -171,4 +191,5 @@ public class ContactData {
     result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
     return result;
   }
+
 }
