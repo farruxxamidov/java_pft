@@ -31,7 +31,7 @@ public class ContactCompareDataTests extends TestBase {
     }
   }
 
-  @Test(enabled = true)
+  @Test(enabled = false)
   public void testContactComparisonData() {
     app.goTo().homePage();
     ContactData contact = app.contact().all().iterator().next();
