@@ -3,10 +3,13 @@ package ru.stqa.pft.addressbook.model;
 import com.google.gson.annotations.Expose;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamOmitField;
+import org.hibernate.annotations.ManyToAny;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.io.File;
+import java.util.HashSet;
+import java.util.Set;
 
 @XStreamAlias("contact")
 @Entity
@@ -64,9 +67,6 @@ public class ContactData {
   private String allEmails;
 
   @Transient
-  private String group;
-
-  @Transient
 //  @Column(name = "photo")
 //  @Type(type = "text")
   private String photo;
@@ -76,6 +76,11 @@ public class ContactData {
 
   @Transient
   private String fio;
+
+  @ManyToMany
+  @JoinTable(name = "address_in_groups",
+          joinColumns = @JoinColumn(name = "id"), inverseJoinColumns = @JoinColumn(name = "group_id"))
+  private Set<GroupData> groups = new HashSet<GroupData>();
 
 
   public void setId(int id) {
@@ -178,14 +183,6 @@ public class ContactData {
     return this;
   }
 
-  public String getGroup() {
-    return group;
-  }
-  public ContactData withGroup(String group) {
-    this.group = group;
-    return this;
-  }
-
   public String getAllData() {
     return allData;
   }
@@ -211,6 +208,10 @@ public class ContactData {
   public ContactData withPhoto(File photo) {
     this.photo = photo.getPath();
     return this;
+  }
+
+  public Groups getGroups() {
+    return new Groups(groups);
   }
 
   @Override
@@ -243,4 +244,8 @@ public class ContactData {
     return result;
   }
 
+  public ContactData inGroup(GroupData group) {
+    groups.add(group);
+    return this;
+  }
 }

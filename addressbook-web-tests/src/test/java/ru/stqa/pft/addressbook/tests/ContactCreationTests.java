@@ -4,10 +4,13 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.thoughtworks.xstream.XStream;
 import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import ru.stqa.pft.addressbook.model.ContactData;
 import ru.stqa.pft.addressbook.model.Contacts;
+import ru.stqa.pft.addressbook.model.GroupData;
+import ru.stqa.pft.addressbook.model.Groups;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -22,6 +25,14 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class ContactCreationTests extends TestBase {
+
+  @BeforeMethod
+  public void ensurePreconditions() {
+    if (app.db().groups().size()==0) {
+      app.goTo().groupPage();
+      app.group().create(new GroupData().withName("test1"));
+    }
+  }
 
     @DataProvider
     public Iterator<Object[]> validContactsFromXml() throws IOException {
@@ -57,18 +68,27 @@ public class ContactCreationTests extends TestBase {
 
     @Test(dataProvider = "validContactsFromJson")
     public void testContactCreation(ContactData contact) {
-        app.goTo().homePage();
-        Contacts before = app.db().contacts();
-        //File photo = new File("src/test/resources/horse-riding.jpg");
-//        ContactData contact = new ContactData().withFirstName("Farrukh").withLastName("Khamidov").
-//                withAddress("Uzbekistan, Tashkent, Bobur street, 4/1").withHomePhone("111").withMobilePhone("222").withWorkPhone("333").withEmail("tester@gmail.com").withPhoto(photo);
-        app.contact().createContact(contact);
-        assertThat(app.contact().count(), equalTo(before.size() + 1));
-        Contacts after = app.db().contacts();
-        assertThat(after, equalTo(before.withAdded(contact.withId(after.stream().mapToInt((c) -> c.getId()).max().getAsInt()))));
+//      Groups groups = app.db().groups();
+//      File photo = new File("/src/test/resources/horse-riding.jpg");
+//      ContactData newContact = new ContactData().withFirstName("Farrukh").withLastName("Khamidov")
+//              .withAddress("Uzbekistan, Tashkent, Bobur street, 4/1").withHomePhone("111").withMobilePhone("222").withWorkPhone("333").withEmail("tester@gmail.com").withPhoto(photo)
+//              .inGroup(groups.iterator().next());
+
+      Contacts before = app.db().contacts();
+      app.contact().createContact(contact);
+      app.goTo().homePage();
+      assertThat(app.contact().count(), equalTo(before.size() + 1));
+      //Contacts after = app.contact().all();
+      //assertThat(after.size(), equalTo(before.size() + 1));
+      Contacts after = app.db().contacts();
+      assertThat(after, equalTo(
+              before.withAdded(contact.withId(after.stream().mapToInt((g) -> g.getId()).max().getAsInt()))));
+      verifyContactListInUI();
     }
 
-    @Test(enabled = false)
+
+
+  @Test(enabled = false)
     public void testCurrentDir() {
         File currentDir = new File(".");
         System.out.println(currentDir.getAbsolutePath());

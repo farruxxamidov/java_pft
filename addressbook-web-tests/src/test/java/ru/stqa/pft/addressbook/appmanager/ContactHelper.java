@@ -26,11 +26,10 @@ public class ContactHelper extends HelperBase{
 
   public void submitContactCreation() {
     //click(By.name("submit"));
-    //click(By.xpath("//div[@id='content']/form/input[21]"));
-    click(By.xpath(".//*[@id='content']/form/input[1]"));
+    click(By.xpath("//div[@id='content']/form/input[21]"));
   }
 
-  public void fillContactForm(ContactData contactData) {
+  public void fillContactForm(ContactData contactData, boolean creation) {
     type(By.name("firstname"), contactData.getFirstName());
     type(By.name("lastname"), contactData.getLastName());
     type(By.name("address"), contactData.getAddress());
@@ -40,11 +39,14 @@ public class ContactHelper extends HelperBase{
     type(By.name("email"), contactData.getEmail());
 //    attach(By.name("photo"), contactData.getPhoto());
 
-//    if (creation) {
-//      new Select(wd.findElement(By.name("new_group"))).selectByVisibleText(contactData.getGroup());
-//    } else {
-//      Assert.assertFalse(isElementPresent(By.name("new_group")));
-//    }
+    if (creation) {
+      if (contactData.getGroups().size() > 0) {
+        Assert.assertTrue(contactData.getGroups().size() == 1);
+        new Select(wd.findElement(By.name("new_group"))).selectByVisibleText(contactData.getGroups().iterator().next().getName());
+      }
+    } else {
+      Assert.assertFalse(isElementPresent(By.name("new_group")));
+    }
 
   }
 
@@ -71,7 +73,7 @@ public class ContactHelper extends HelperBase{
 
   public void createContact(ContactData contact) {
     initContactCreation();
-    fillContactForm(contact);
+    fillContactForm(contact, true);
     submitContactCreation();
     contactCache = null;
     goToHomePage();
@@ -94,13 +96,13 @@ public class ContactHelper extends HelperBase{
     contactCache = null;
   }
 
-  private void selectContactById(int id) {
+  public void selectContactById(int id) {
     wd.findElement(By.cssSelector("input[value='" + id + "']")).click();
   }
 
   public void modify(ContactData contact) {
     initContactModificationById(contact.getId());
-    fillContactForm(contact);
+    fillContactForm(contact, true);
     submitContactModification();
     contactCache = null;
     goToHomePage();
@@ -223,5 +225,15 @@ public class ContactHelper extends HelperBase{
   private void initContactDetailsById(int id) {
     wd.findElement(By.cssSelector(String.format("a[href='view.php?id=%s']", id))).click();
   }
+
+  public void selectGroupForAdding(String group) {
+    new Select(wd.findElement(By.name("to_group")))
+            .selectByVisibleText(group);
+  }
+
+  public void addToGroup() {
+    click(By.name("add"));
+  }
+
 
 }
