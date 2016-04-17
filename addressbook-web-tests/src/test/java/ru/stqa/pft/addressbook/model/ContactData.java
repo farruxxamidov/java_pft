@@ -66,8 +66,9 @@ public class ContactData {
   @Transient
   private String group;
 
-  @Column(name = "photo")
-  @Type(type = "text")
+  @Transient
+//  @Column(name = "photo")
+//  @Type(type = "text")
   private String photo;
 
   @Transient

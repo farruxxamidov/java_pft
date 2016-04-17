@@ -26,7 +26,8 @@ public class ContactHelper extends HelperBase{
 
   public void submitContactCreation() {
     //click(By.name("submit"));
-    click(By.xpath("//div[@id='content']/form/input[21]"));
+    //click(By.xpath("//div[@id='content']/form/input[21]"));
+    click(By.xpath(".//*[@id='content']/form/input[1]"));
   }
 
   public void fillContactForm(ContactData contactData) {
@@ -37,7 +38,7 @@ public class ContactHelper extends HelperBase{
     type(By.name("mobile"), contactData.getMobilePhone());
     type(By.name("work"), contactData.getWorkPhone());
     type(By.name("email"), contactData.getEmail());
-    attach(By.name("photo"), contactData.getPhoto());
+//    attach(By.name("photo"), contactData.getPhoto());
 
 //    if (creation) {
 //      new Select(wd.findElement(By.name("new_group"))).selectByVisibleText(contactData.getGroup());

@@ -68,7 +68,7 @@ public class ContactCreationTests extends TestBase {
         assertThat(after, equalTo(before.withAdded(contact.withId(after.stream().mapToInt((c) -> c.getId()).max().getAsInt()))));
     }
 
-    @Test(enabled = true)
+    @Test(enabled = false)
     public void testCurrentDir() {
         File currentDir = new File(".");
         System.out.println(currentDir.getAbsolutePath());
