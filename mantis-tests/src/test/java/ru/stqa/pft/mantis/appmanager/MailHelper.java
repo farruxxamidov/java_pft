@@ -36,7 +36,7 @@ public class MailHelper {
         e.printStackTrace();
       }
     }
-    throw new Error("Mo mail :(");
+    throw new Error("No mail :(");
   }
 
   public static MailMessage toModelMail(WiserMessage m) {
